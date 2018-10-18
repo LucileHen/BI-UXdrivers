@@ -53,6 +53,8 @@
 <script type="text/javascript">
 
 
+    //Test var
+    var test = 1;
 
     //Width and height
     var w = 800;
@@ -87,8 +89,20 @@
             .enter()
             .append("path")
             .attr("d", path)
+            .attr("class", "unclicked")
             .attr("stroke", "rgba(8, 81, 156, 0.2)")
-            .attr("fill", "rgba(8, 81, 156, 0.6)");
+            .attr("fill", "rgba(8, 81, 156, 0.6)")
+            .on("click", function (d){
+                var e = d3.select(this);
+                if(e.attr("class") === "unclicked") {
+                    e.attr("class", "clicked");
+                    e.style("fill", "green");
+                } else {
+                    e.attr("class","unclicked");
+                    e.style("fill", "");
+                }
+
+            })
 
     });
 
