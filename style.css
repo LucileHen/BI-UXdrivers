@@ -99,3 +99,8 @@ path:hover {
     padding-left: 190px;
     padding-top: 25px;
 }
+
+.selectedYear {
+    color: white;
+    background:darkgray;
+}

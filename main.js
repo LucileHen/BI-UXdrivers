@@ -1,3 +1,9 @@
+//Button color change
+$( "button#jQueryColorChangeYear" ).click(function() {
+    $("button#jQueryColorChangeYear").removeClass('selectedYear');
+    $(this).toggleClass( "selectedYear" );
+});
+
 //Width and height
 var w = 700;
 var h = 500;
