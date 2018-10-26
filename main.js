@@ -1,7 +1,7 @@
 //Button color change
-$( "button#jQueryColorChangeYear" ).click(function() {
+$("button#jQueryColorChangeYear").click(function () {
     $("button#jQueryColorChangeYear").removeClass('selectedYear');
-    $(this).toggleClass( "selectedYear" );
+    $(this).toggleClass("selectedYear");
 });
 
 //Width and height
@@ -51,7 +51,7 @@ function draw() {
             });
 
             if (vehicules.length > 0) {
-                return +vehicules[0][type].replace(",", ".");
+                return +vehicules[0][type];
             }
             else {
                 return 0.0;
@@ -66,7 +66,9 @@ d3.json("countries.json", function (json) {
     //Create csv with googlesheet data
     d3.csv(URL, function (data) {
         data_vehicules = data;
-
+        data_vehicules.forEach(function (d) {
+            d.ElectriqueP = +d.ElectriqueP.replace(",",".")
+        });
         console.log(data_vehicules);
 
         //Bind data and create one path per GeoJSON feature
@@ -77,18 +79,45 @@ d3.json("countries.json", function (json) {
             .attr("d", path)
             .attr("class", "unclicked color_0")
             .attr("stroke", "#606060")
-            .style("fill-opacity", (function (e) {
+            .style("fill-opacity", function (e) {
 
                 vehicules = data_vehicules.filter(function (f) {
                     return f.Name === e.properties.NAME && f["Année"] == year;
                 });
 
                 if (vehicules.length > 0) {
-                    return +vehicules[0]["ElectriqueP"].replace(",", ".");
+                    return +vehicules[0]["ElectriqueP"];
                 } else {
                     return 0.0;
                 }
-            }));
+            })
+            .on("mousemove", function (d) {
+
+                d3.select(".tooltipD3")
+                    .style("display", "block")
+                    .style("left", d3.mouse(this)[0] + "px")
+                    .style("top", d3.mouse(this)[1] + "px")
+                    .text(function (e) {
+
+                        vehicules = data_vehicules.filter(function (f) {
+                            return f.Name === d.properties.NAME && f["Année"] == year;
+                        });
+                        console.log(vehicules);
+                        if (vehicules.length > 0) {
+                            return +vehicules[0]["ElectriqueP"] * 100. + " %";
+                        } else {
+                            return '?';
+                        }
+                    });
+
+            })
+            .on("mouseout", function (d) {
+                d3.select(".tooltipD3")
+                    .style("display", "none");
+                d3.select(this)
+                    .transition().duration(100)
+            });
+
 
         $(".btnyear2012").click(function () {
             year = 2012;
@@ -111,17 +140,17 @@ d3.json("countries.json", function (json) {
             draw();
         })
 
-        .on("click", function (d) {
-            var e = $(this);
-            if (e.hasClass("unclicked")) {
-                e.removeClass("unclicked");
-                e.addClass("clicked");
-            } else if (e.hasClass("clicked")) {
-                e.removeClass("clicked");
-                e.addClass("unclicked");
-            }
+            .on("click", function (d) {
+                var e = $(this);
+                if (e.hasClass("unclicked")) {
+                    e.removeClass("unclicked");
+                    e.addClass("clicked");
+                } else if (e.hasClass("clicked")) {
+                    e.removeClass("clicked");
+                    e.addClass("unclicked");
+                }
 
-        });
+            });
 
         $(".btnmotor").click(function () {
             var id = $(this).attr("id").replace("btn", "");
