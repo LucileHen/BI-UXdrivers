@@ -4,6 +4,39 @@ $("button.jQueryColorChangeYear").click(function () {
     $(this).toggleClass("selectedYear");
 });
 
+function clear_fuel_classes(){
+    $("button.jQueryColorChangeFuel1").removeClass('selectedFuel1');
+    $("button.jQueryColorChangeFuel2").removeClass('selectedFuel2');
+    $("button.jQueryColorChangeFuel3").removeClass('selectedFuel3');
+    $("button.jQueryColorChangeFuel4").removeClass('selectedFuel4');
+    $("button.jQueryColorChangeFuel5").removeClass('selectedFuel5');
+}
+
+$("button.jQueryColorChangeFuel1").click(function () {
+    clear_fuel_classes();
+    $(this).toggleClass("selectedFuel1");
+});
+
+$("button.jQueryColorChangeFuel2").click(function () {
+    clear_fuel_classes();
+    $(this).toggleClass("selectedFuel2");
+});
+
+$("button.jQueryColorChangeFuel3").click(function () {
+    clear_fuel_classes();
+    $(this).toggleClass("selectedFuel3");
+});
+
+$("button.jQueryColorChangeFuel4").click(function () {
+    clear_fuel_classes();
+    $(this).toggleClass("selectedFuel4");
+});
+
+$("button.jQueryColorChangeFuel5").click(function () {
+    clear_fuel_classes();
+    $(this).toggleClass("selectedFuel5");
+});
+
 //Width and height
 var w = 700;
 var h = 500;

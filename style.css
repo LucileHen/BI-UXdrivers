@@ -16,28 +16,48 @@ h1 {
 }
 
 #btn1 {
-    background-color: #956633;
-    color: white;
+    border-color: #956633;
+    color: black;
+}
+.selectedFuel1 {
+    color: white !important;
+    background:#956633;
 }
 
 #btn2 {
-    background-color: #58A4B0;
-    color: white;
+    border-color: #58A4B0;
+    color: black;
+}
+.selectedFuel2 {
+    color: white !important;
+    background:#58A4B0;
 }
 
 #btn3 {
-    background-color: #0C7C59;
-    color: white;
+    border-color: #0C7C59;
+    color: black;
+}
+.selectedFuel3 {
+    color: white !important;
+    background:#0C7C59;
 }
 
 #btn4 {
-    background-color: #2B3C3A;
-    color: white;
+    border-color: #2B3C3A;
+    color: black;
+}
+.selectedFuel4 {
+    color: white !important;
+    background:#2B3C3A;
 }
 
 #btn5 {
-    background-color: #D64933;
-    color: white;
+    border-color: #D64933;
+    color: black;
+}
+.selectedFuel5 {
+    color: white !important;
+    background:#D64933;
 }
 
 .unclicked.color_0{
