@@ -2,112 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Mercator projection</title>
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-    <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <style type="text/css">
+    <title>BI</title>
 
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-        svg {
-            background-color: #d3d3d3;
-        }
+    <!--CSS-->
+    <link rel="stylesheet" href="style.css">
 
-        h1 {
-            color: rgb(115, 115, 115);
-            font-size: 18px;
-            font-family: sans-serif;
-            font-weight: bold;
-            margin: 0;
-            padding-bottom: 10px;
-
-        }
-
-        #container {
-            width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 20px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
-        }
-
-        path:hover {
-            fill: rgba(8, 81, 156, 0.2);
-            cursor:pointer;
-        }
-
-
-
-    </style>
 </head>
 <body>
-
-
-<div id="container">
-    <h1>World map centered on European countries</h1>
-
+<div class="row">
+    <div id="container" class="col">
+        <h1>World map centered on European countries</h1>
+    </div>
+    <div class="col">
+        <br>
+        <button type="button" data-type="ElectriqueP" class="btn btn-light btntest" id="btn1">Electrique</button>
+        <br>
+        <br>
+        <button type="button" data-type="DieselP" class="btn btn-light btntest" id="btn2">Diesel</button>
+        <br>
+        <br>
+        <button type="button" data-type="EssenceP" class="btn btn-light btntest" id="btn3">Essence</button>
+        <br>
+        <br>
+        <button type="button" data-type="HEssenceP" class="btn btn-light btntest" id="btn4">Hybride Essence</button>
+        <br>
+        <br>
+        <button type="button" data-type="HDieselP" class="btn btn-light btntest" id="btn5">Hybride Diesel</button>
+    </div>
+</div>
+<div class="row decale">
+    <div class="col">
+    <br>
+    <button type="button" class="btn btn-light btnyear2012">2012</button>
+    <button type="button" class="btn btn-light btnyear2013">2013</button>
+    <button type="button" class="btn btn-light btnyear2014">2014</button>
+    <button type="button" class="btn btn-light btnyear2015">2015</button>
+    <button type="button" class="btn btn-light btnyear2016">2016</button>
+    </div>
 </div>
 
+<!--TOPOJSON V2-->
+<script src="https://d3js.org/topojson.v2.min.js"></script>
 
-<script type="text/javascript">
+<!--Jquery-->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
+<!--D3 V4-->
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
 
-    //Test var
-    var test = 1;
+<!--JS-->
+<script src="main.js"></script>
 
-    //Width and height
-    var w = 800;
-    var h = 600;
-
-    //Define map projection
-
-
-    var projection = d3.geoMercator() //utiliser une projection standard pour aplatir les pôles, voir D3 projection plugin
-        .center([ 13, 55.5 ]) //comment centrer la carte, longitude, latitude
-        .translate([ w/2, h/2 ]) // centrer l'image obtenue dans le svg
-        .scale([ w/1.5 ])// zoom, plus la valeur est petit plus le zoom est gros
-        .rotate([0,0,-2.7]);
-
-    //Define path generator
-    var path = d3.geoPath()
-        .projection(projection);
-
-
-    //Create SVG
-    var svg = d3.select("#container")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h);
-
-    //Load in GeoJSON data
-    d3.json("countries.json", function(json) {
-
-        //Bind data and create one path per GeoJSON feature
-        svg.selectAll("path")
-            .data(json.features)
-            .enter()
-            .append("path")
-            .attr("d", path)
-            .attr("class", "unclicked")
-            .attr("stroke", "rgba(8, 81, 156, 0.2)")
-            .attr("fill", "rgba(8, 81, 156, 0.6)")
-            .on("click", function (d){
-                var e = d3.select(this);
-                if(e.attr("class") === "unclicked") {
-                    e.attr("class", "clicked");
-                    e.style("fill", "green");
-                } else {
-                    e.attr("class","unclicked");
-                    e.style("fill", "");
-                }
-
-            })
-
-    });
-
-
-
-</script>
 </body>
 </html>

@@ -1,0 +1,101 @@
+svg {
+    background-color: #d3d3d3;
+}
+
+h1 {
+    color: rgb(115, 115, 115);
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.decale{
+    padding-left: 230px !important;
+}
+
+#btn1 {
+    background-color: #956633;
+    color: white;
+}
+
+#btn2 {
+    background-color: #58A4B0;
+    color: white;
+}
+
+#btn3 {
+    background-color: #0C7C59;
+    color: white;
+}
+
+#btn4 {
+    background-color: #2B3C3A;
+    color: white;
+}
+
+#btn5 {
+    background-color: #D64933;
+    color: white;
+}
+
+.unclicked.color_0{
+    fill : #956633;
+}
+
+.unclicked.color_1{
+    fill : #58A4B0;
+}
+
+.unclicked.color_2{
+    fill : #0C7C59;
+}
+
+.unclicked.color_3{
+    fill : #2B3C3A;
+}
+
+.unclicked.color_4{
+    fill : #D64933;
+}
+
+.clicked.color_0{
+    fill : white;
+}
+
+.clicked.color_1{
+    fill : white;
+}
+
+.clicked.color_2{
+    fill : white;
+}
+
+.clicked.color_3{
+    fill : white;
+}
+
+.clicked.color_4{
+    fill : white;
+}
+
+#container {
+    width: 800px;
+    margin-left: 40px;
+    margin-right: auto;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+}
+
+path:hover {
+    /*fill: rgba(8, 81, 156, 0.2);*/
+    cursor: pointer;
+}
+
+.test {
+    padding-left: 190px;
+    padding-top: 25px;
+}
