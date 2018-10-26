@@ -16,7 +16,6 @@ URL += "/pub?single=true&output=csv";
 
 var data_vehicules = [];
 
-
 //Define path generator
 var path = d3.geoPath()
     .projection(projection);
@@ -37,13 +36,33 @@ function reset_color(e) {
     }
 }
 
+function draw() {
+    svg.selectAll("path")
+        .style("fill-opacity", (function (e) {
+
+            vehicules = data_vehicules.filter(function (f) {
+                return f.Name === e.properties.NAME && f["Année"] == year;
+            });
+
+            if (vehicules.length > 0) {
+                return +vehicules[0][type].replace(",", ".");
+            }
+            else {
+                return 0.0;
+            }
+
+        }))
+}
+
 //Load in GeoJSON data
 d3.json("countries.json", function (json) {
 
     //Create csv with googlesheet data
     d3.csv(URL, function (data) {
         data_vehicules = data;
-        /*console.log(data_vehicules);*/
+
+        console.log(data_vehicules);
+
         //Bind data and create one path per GeoJSON feature
         svg.selectAll("path")
             .data(json.features)
@@ -59,139 +78,52 @@ d3.json("countries.json", function (json) {
                 });
 
                 if (vehicules.length > 0) {
-                    /*console.log(+vehicules[0]["ElectriqueP"].replace(",", "."));*/
                     return +vehicules[0]["ElectriqueP"].replace(",", ".");
                 } else {
                     return 0.0;
                 }
-
             }));
+
         $(".btnyear2012").click(function () {
             year = 2012;
-            var min = d3.min(d3.values(data));
-            var max = d3.max(d3.values(data));
-            svg.selectAll("path")
-                    .style("fill-opacity", (function (e) {
-
-                        vehicules = data_vehicules.filter(function (f) {
-                            return f.Name === e.properties.NAME && f["Année"] == year;
-                        });
-
-                        if (vehicules.length > 0) {
-                            return +vehicules[0][type].replace(",", ".");
-                        }
-                        else {
-                            return 0.0;
-                        }
-
-                    }))
-
+            draw();
         });
-
         $(".btnyear2013").click(function () {
             year = 2013;
-            svg.selectAll("path")
-                .style("fill-opacity", (function (e) {
-
-                    vehicules = data_vehicules.filter(function (f) {
-                        return f.Name === e.properties.NAME && f["Année"] == year;
-                    });
-
-                    if (vehicules.length > 0) {
-                        return +vehicules[0][type].replace(",", ".");
-                    } else {
-                        return 0.0;
-                    }
-                }));
+            draw();
         });
-
         $(".btnyear2014").click(function () {
             year = 2014;
-            svg.selectAll("path")
-                .style("fill-opacity", (function (e) {
-
-                    vehicules = data_vehicules.filter(function (f) {
-                        return f.Name === e.properties.NAME && f["Année"] == year;
-                    });
-
-                    if (vehicules.length > 0) {
-                        return +vehicules[0][type].replace(",", ".");
-                    } else {
-                        return 0.0;
-                    }
-                }));
+            draw();
         });
-
         $(".btnyear2015").click(function () {
             year = 2015;
-            svg.selectAll("path")
-                .style("fill-opacity", (function (e) {
-
-                    vehicules = data_vehicules.filter(function (f) {
-                        return f.Name === e.properties.NAME && f["Année"] == year;
-                    });
-
-                    if (vehicules.length > 0) {
-                        return +vehicules[0][type].replace(",", ".");
-                    } else {
-                        return 0.0;
-                    }
-                }));
+            draw();
         });
-
         $(".btnyear2016").click(function () {
             year = 2016;
-            svg.selectAll("path")
-                .style("fill-opacity", (function (e) {
-
-                    vehicules = data_vehicules.filter(function (f) {
-                        return f.Name === e.properties.NAME && f["Année"] == year;
-                    });
-
-                    if (vehicules.length > 0) {
-                        return +vehicules[0][type].replace(",", ".");
-                    } else {
-                        return 0.0;
-                    }
-                }));
+            draw();
         })
 
-            .on("click", function (d) {
-                /*console.log(d.properties.NAME);
-                vehicules = data_vehicules.filter(function (e) {
-                    return e.Name === d.properties.NAME && e["Année"] == year;
-                });
-                console.log(vehicules[0]["ElectriqueP"]);*/
-                var e = $(this);
-                if (e.hasClass("unclicked")) {
-                    e.removeClass("unclicked");
-                    e.addClass("clicked");
-                } else if (e.hasClass("clicked")) {
-                    e.removeClass("clicked");
-                    e.addClass("unclicked");
-                }
+        .on("click", function (d) {
+            var e = $(this);
+            if (e.hasClass("unclicked")) {
+                e.removeClass("unclicked");
+                e.addClass("clicked");
+            } else if (e.hasClass("clicked")) {
+                e.removeClass("clicked");
+                e.addClass("unclicked");
+            }
 
-            });
+        });
 
-        $(".btntest").click(function () {
+        $(".btnmotor").click(function () {
             var id = $(this).attr("id").replace("btn", "");
             console.log(id);
             type = $(this).attr("data-type");
             reset_color();
             $("path").addClass("color_" + (+id - 1));
-            svg.selectAll("path")
-                .style("fill-opacity", (function (e) {
-
-                    vehicules = data_vehicules.filter(function (f) {
-                        return f.Name === e.properties.NAME && f["Année"] == year;
-                    });
-
-                    if (vehicules.length > 0) {
-                        return +vehicules[0][type].replace(",", ".");
-                    } else {
-                        return 0.0;
-                    }
-                }));
+            draw();
         });
 
     });
