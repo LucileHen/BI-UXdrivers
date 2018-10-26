@@ -62,22 +62,27 @@ h1 {
 
 .clicked.color_0{
     fill : white;
+    fill-opacity: 1;
 }
 
 .clicked.color_1{
     fill : white;
+    fill-opacity: 1;
 }
 
 .clicked.color_2{
     fill : white;
+    fill-opacity: 1;
 }
 
 .clicked.color_3{
     fill : white;
+    fill-opacity: 1;
 }
 
 .clicked.color_4{
     fill : white;
+    fill-opacity: 1;
 }
 
 #container {

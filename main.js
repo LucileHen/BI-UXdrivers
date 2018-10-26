@@ -43,6 +43,18 @@ function reset_color(e) {
 }
 
 function draw() {
+    opacity_scale = d3.scaleLinear().range([0.3, 0.9]);
+    opacity_scale.domain([
+        0,
+        d3.max(data_vehicules, function (d) {
+             if (d["Année"] == year){
+                 return +d[type].replace(",",".");
+             } else {
+                 return 0.0;
+             }
+        })
+    ]);
+
     svg.selectAll("path")
         .style("fill-opacity", (function (e) {
 
@@ -51,7 +63,7 @@ function draw() {
             });
 
             if (vehicules.length > 0) {
-                return +vehicules[0][type].replace(",", ".");
+                return opacity_scale(+vehicules[0][type].replace(",", "."));
             }
             else {
                 return 0.0;
@@ -67,8 +79,6 @@ d3.json("countries.json", function (json) {
     d3.csv(URL, function (data) {
         data_vehicules = data;
 
-        console.log(data_vehicules);
-
         //Bind data and create one path per GeoJSON feature
         svg.selectAll("path")
             .data(json.features)
@@ -77,18 +87,56 @@ d3.json("countries.json", function (json) {
             .attr("d", path)
             .attr("class", "unclicked color_0")
             .attr("stroke", "#606060")
-            .style("fill-opacity", (function (e) {
+            .style("fill-opacity", function (e) {
+
 
                 vehicules = data_vehicules.filter(function (f) {
                     return f.Name === e.properties.NAME && f["Année"] == year;
                 });
 
                 if (vehicules.length > 0) {
-                    return +vehicules[0]["ElectriqueP"].replace(",", ".");
+                    return +vehicules[0][type].replace(",", ".");
                 } else {
                     return 0.0;
                 }
-            }));
+            })
+            .on("click", function (d) {
+                var e = $(this);
+                if (e.hasClass("unclicked")) {
+                    e.removeClass("unclicked");
+                    e.addClass("clicked");
+                } else if (e.hasClass("clicked")) {
+                    e.removeClass("clicked");
+                    e.addClass("unclicked");
+                }
+
+            })
+            .on("mousemove", function (d) {
+
+                d3.select(".tooltipD3")
+                    .style("display", "block")
+                    .style("left", d3.mouse(this)[0] + "px")
+                    .style("top", d3.mouse(this)[1] + "px")
+                    .text(function (e) {
+
+                        vehicules = data_vehicules.filter(function (f) {
+                            return f.Name === d.properties.NAME && f["Année"] == year;
+                        });
+                        if (vehicules.length > 0) {
+                            return +vehicules[0][type].replace(",", ".") * 100. + " %";
+                        } else {
+                            return '?';
+                        }
+                    });
+
+            })
+            .on("mouseout", function (d) {
+                d3.select(".tooltipD3")
+                    .style("display", "none");
+                d3.select(this)
+                    .transition().duration(100)
+            });
+
 
         $(".btnyear2012").click(function () {
             year = 2012;
@@ -109,29 +157,16 @@ d3.json("countries.json", function (json) {
         $(".btnyear2016").click(function () {
             year = 2016;
             draw();
-        })
-
-        .on("click", function (d) {
-            var e = $(this);
-            if (e.hasClass("unclicked")) {
-                e.removeClass("unclicked");
-                e.addClass("clicked");
-            } else if (e.hasClass("clicked")) {
-                e.removeClass("clicked");
-                e.addClass("unclicked");
-            }
-
         });
 
         $(".btnmotor").click(function () {
             var id = $(this).attr("id").replace("btn", "");
-            console.log(id);
             type = $(this).attr("data-type");
             reset_color();
             $("path").addClass("color_" + (+id - 1));
             draw();
         });
-
+        draw();
     });
 
 });
