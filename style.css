@@ -111,13 +111,17 @@ path:hover {
 }
 
 .tooltipD3 {
+
+    border-radius:0.5em;
+    background-color:rgba(0,0,0,0.9);
+    padding:0.3em;
     position: absolute;
-    background-color: #eee;
-    color: #6522ff;
+    color: white;
     font-size: 12px;
-    width: 50px;
-    height: 20px;
+    width: 70px;
+    height: 26px;
     font-family: monospace;
     text-align: center;
     z-index: 1000;
+    display: none;
 }

@@ -95,7 +95,7 @@ d3.json("countries.json", function (json) {
                 });
 
                 if (vehicules.length > 0) {
-                    return +vehicules[0][type].replace(",", ".");
+                    return Math.round(vehicules[0][type].replace(",", ".")*100)/100;
                 } else {
                     return 0.0;
                 }
@@ -115,17 +115,17 @@ d3.json("countries.json", function (json) {
 
                 d3.select(".tooltipD3")
                     .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + "px")
-                    .style("top", d3.mouse(this)[1] + "px")
+                    .style("left", d3.mouse(this)[0] + 10 + "px")
+                    .style("top", d3.mouse(this)[1] + 35 + "px")
                     .text(function (e) {
 
                         vehicules = data_vehicules.filter(function (f) {
                             return f.Name === d.properties.NAME && f["Année"] == year;
                         });
                         if (vehicules.length > 0) {
-                            return +vehicules[0][type].replace(",", ".") * 100. + " %";
+                            return Math.round((vehicules[0][type].replace(",", ".") * 100)*1000)/1000+ " %"
                         } else {
-                            return '?';
+                            return "Inconnues";
                         }
                     });
 
@@ -133,8 +133,6 @@ d3.json("countries.json", function (json) {
             .on("mouseout", function (d) {
                 d3.select(".tooltipD3")
                     .style("display", "none");
-                d3.select(this)
-                    .transition().duration(100)
             });
 
 
