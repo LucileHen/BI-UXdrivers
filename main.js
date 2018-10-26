@@ -1,6 +1,6 @@
 //Button color change
-$("button#jQueryColorChangeYear").click(function () {
-    $("button#jQueryColorChangeYear").removeClass('selectedYear');
+$("button.jQueryColorChangeYear").click(function () {
+    $("button.jQueryColorChangeYear").removeClass('selectedYear');
     $(this).toggleClass("selectedYear");
 });
 
