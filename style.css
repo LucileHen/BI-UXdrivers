@@ -1,13 +1,25 @@
+
 svg {
     background-color: white;
 }
 
 h1 {
-    color: rgb(115, 115, 115);
-    font-size: 18px;
-    font-family: sans-serif;
+    color: rgb(36, 142, 216);
+    font-size: 30pt;
+    font-family: 'Lato', sans-serif;
     font-weight: bold;
-    margin: 0;
+    font-variant: small-caps;
+    margin: auto;
+    padding: 20px;
+    padding-bottom: 10px;
+}
+h2 {
+    color: rgb(black);
+    font-size: 19.5pt;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    margin: auto;
+    padding: 10px;
     padding-bottom: 10px;
 }
 
@@ -132,12 +144,13 @@ path:hover {
 .tooltipD3 {
 
     border-radius:0.5em;
+    white-space: nowrap;
     background-color:rgba(0,0,0,0.9);
     padding:0.3em;
     position: absolute;
     color: white;
     font-size: 12px;
-    width: 70px;
+    /*width: 70px;*/
     height: 26px;
     font-family: monospace;
     text-align: center;

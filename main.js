@@ -267,15 +267,7 @@ d3.json("countries.json", function (json) {
                     .style("left", d3.mouse(this)[0] + 10 + "px")
                     .style("top", d3.mouse(this)[1] + 35 + "px")
                     .text(function (e) {
-
-                        vehicules = data_vehicules.filter(function (f) {
-                            return f.Name === d.properties.NAME && f["Année"] == year;
-                        });
-                        if (vehicules.length > 0) {
-                            return Math.round((vehicules[0][type].replace(",", ".") * 100)*1000)/1000+ " %"
-                        } else {
-                            return "Inconnues";
-                        }
+                        return d.properties.NAME;
                     });
 
             })
