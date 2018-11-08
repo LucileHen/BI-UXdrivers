@@ -178,7 +178,7 @@ var path = d3.geoPath()
     .projection(projection);
 
 //Create SVG
-var svg = d3.select("#container")
+var svg = d3.select("#map")
     .append("svg")
     .attr("width", w)
     .attr("height", h);
