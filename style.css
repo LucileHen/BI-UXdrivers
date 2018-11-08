@@ -1,6 +1,6 @@
 
 svg {
-    background-color: #FFFFFF;
+    background-color: white;
 }
 
 h1 {
@@ -88,7 +88,6 @@ h2 {
 }
 
 #container {
-    /*width: 800px;*/
     margin-left: 40px;
     margin-right: auto;
     margin-top: 20px;

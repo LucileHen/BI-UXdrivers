@@ -3,6 +3,115 @@ $("button.jQueryColorChangeYear").click(function () {
     $("button.jQueryColorChangeYear").removeClass('selectedYear');
     $(this).toggleClass("selectedYear");
 });
+//define var data
+var data = undefined;
+
+// define margin
+var margin = {top: 20, right: 20, bottom: 30, left: 40};
+
+//Define colors
+var colors = ["#0B4F6C", "#F4AA29", "#20BF55", "#F4295F", "#248ED8"];
+
+//Crate a barchart
+function bar_chart(element) {
+    //Clean html in id element
+    $("#" + element).html("");
+    //create a group for svg with margin
+    var svg = d3.select("#" + element).append("svg").attr("width", 1000).attr("height", 500);
+    var width = +svg.attr("width") - margin.left - margin.right;
+    var height = +svg.attr("height") - margin.top - margin.bottom;
+    var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    //Create an array with the only three data we need
+    /*var nested_data = d3.nest()
+    //Regroup data by property
+        .key(function (d) {
+            return d[property];
+        })
+        //Calculate number of property and the time it takes
+        .rollup(function (d) {
+            return {
+                size: d.length, total_time: d3.sum(d, function (d) {
+                    return d.time;
+                })
+            };
+        })
+        .entries(data);
+
+    //Sort nested data by alphabetical order
+    nested_data = nested_data.sort(function (a, b) {
+        return d3.ascending(a.key, b.key)
+    });*/
+
+    //Create var x
+    var x = d3.scaleBand()
+        .rangeRound([0, width])
+        .padding(0.1);
+
+    //Create var y
+    var y = d3.scaleLinear()
+        .rangeRound([height, 0]);
+
+    //Create var z
+    var z = d3.scaleOrdinal(colors);
+
+    //Define the domain of x axe
+    x.domain(data.map(function(d) {
+        return d.Name;
+    }));
+
+    //Define the domain of y axe
+    y.domain([0, d3.max(data, function(d) {
+        return d.TOTAL;
+    })]);
+    //Define the domain of colors
+    /*z.domain(data.map(function (d) {
+        return d.colors;
+    }));*/
+
+    //draw the barchart
+    g.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+            return x(d.Name)
+        })
+        .attr("y", function (d) {
+            return y(d.TOTAL)
+        })
+        .attr("height",function(d) {
+            return height - y(d.TOTAL);
+        })
+        .attr("width", x.bandwidth())
+        .style("fill", function (d) {
+            return z(d.Name)
+        })
+        /*.on("mouseover", function(d){
+            d3.select(this)
+                .transition().duration(100)
+                .attr("fill", "black")
+                .attr("y", y(d.value.size) - 20)
+        })
+        .on("mouseout", function(d){
+            d3.select(this)
+                .transition().duration(100)
+                .attr("y", y(d.value.size))
+        });*/
+
+    //create a group for x axe
+    g.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    //crate a group for y axe
+    g.append("g")
+        .attr("class", "axis")
+        .call(d3.axisLeft(y).ticks(null, "s"))
+}
 
 function clear_fuel_classes(){
     $("button.jQueryColorChangeFuel1").removeClass('selectedFuel1');
@@ -47,6 +156,7 @@ var projection = d3.geoMercator() //utiliser une projection standard pour aplati
     .translate([w / 2, h / 2]) // centrer l'image obtenue dans le svg
     .scale([w / 1.5])// zoom, plus la valeur est petit plus le zoom est gros
     .rotate([0, 0, -2.7]);
+
 
 
 //Load the googlesheet data
@@ -97,8 +207,14 @@ function draw() {
 d3.json("countries.json", function (json) {
 
     //Create csv with googlesheet data
-    d3.csv(URL, function (data) {
-        data_vehicules = data;
+    d3.csv(URL, function (d) {
+        data_vehicules = d;
+        data = d;
+        data.forEach(function(d){
+            d.TOTAL = + d.TOTAL;
+        });
+
+        bar_chart("pol");
 
         //Bind data and create one path per GeoJSON feature
         svg.selectAll("path")
