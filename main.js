@@ -21,6 +21,10 @@ function bar_chart(element, country, type) {
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0)
+        .style("width", 600);
 
     var labels = {
         pol: ["Emission NOx (T)", "Emission CO2 (T)", "Emission PM10 (T)" ],
@@ -90,6 +94,15 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return z(d.label)
         })
+        .on('mouseover', function(d) {
+            d3.select(this).style('fill-opacity',"0.7");
+            console.log('over');
+
+        })
+        .on('mouseout', function(d) {
+            d3.select(this).style('fill-opacity',"1");
+            console.log('out');
+        });
         /*.on("mouseover", function(d){
             d3.select(this)
                 .transition().duration(100)
@@ -175,50 +188,38 @@ var data_vehicules = [];
 var path = d3.geoPath()
     .projection(projection);
 
-//Define the default year
-var year = 2012;
-var type = "ElectriqueP";
-
 //Create SVG
-var svg = d3.select("#container")
+var svg = d3.select("#map")
     .append("svg")
     .attr("width", w)
     .attr("height", h);
 
-function reset_color(e) {
-    for (var i = 0; i < 5; i++) {
-        $("path").removeClass("color_" + i);
-    }
-}
 
 function draw() {
-    opacity_scale = d3.scaleLinear().range([0.3, 0.9]);
+    opacity_scale = d3.scaleLinear().range([1, 0.2]);
     opacity_scale.domain([
         0,
-        d3.max(data_vehicules, function (d) {
-             if (d["Année"] == year){
-                 return +d[type].replace(",",".");
-             } else {
-                 return 0.0;
-             }
+        d3.max(data_vehicules, function (d){
+                 return +d.Note.replace(",",".");
+
         })
     ]);
 
     svg.selectAll("path")
-        .style("fill-opacity", (function (e) {
+        .style("fill-opacity", function (e) {
+
 
             vehicules = data_vehicules.filter(function (f) {
-                return f.Name === e.properties.NAME && f["Année"] == year;
+                return f.Name === e.properties.NAME;
             });
 
             if (vehicules.length > 0) {
-                return opacity_scale(+vehicules[0][type].replace(",", "."));
+                return opacity_scale(Math.round(vehicules[0].Note.replace(",", ".")*100)/100);
+            } else {
+                $(this).addClass("unknown");
             }
-            else {
-                return 0.0;
-            }
+        })
 
-        }))
 }
 
 //Load in GeoJSON data
@@ -242,20 +243,8 @@ d3.json("countries.json", function (json) {
             .append("path")
             .attr("d", path)
             .attr("class", "unclicked color_0")
-            .attr("stroke", "#606060")
-            .style("fill-opacity", function (e) {
-
-
-                vehicules = data_vehicules.filter(function (f) {
-                    return f.Name === e.properties.NAME && f["Année"] == year;
-                });
-
-                if (vehicules.length > 0) {
-                    return Math.round(vehicules[0][type].replace(",", ".")*100)/100;
-                } else {
-                    return 0.0;
-                }
-            })
+            .attr("stroke", "#FFFFFF")
+            .attr("stroke-width", "0.6")
             .on("click", function (d) {
                 var e = $(this);
                 if (e.hasClass("unclicked")) {
@@ -271,8 +260,8 @@ d3.json("countries.json", function (json) {
 
                 d3.select(".tooltipD3")
                     .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + 10 + "px")
-                    .style("top", d3.mouse(this)[1] + 35 + "px")
+                    .style("left", d3.mouse(this)[0] + 23 + "px")
+                    .style("top", d3.mouse(this)[1] + 130 + "px")
                     .text(function (e) {
                         return d.properties.NAME;
                     });
@@ -283,27 +272,6 @@ d3.json("countries.json", function (json) {
                     .style("display", "none");
             });
 
-
-        $(".btnyear2012").click(function () {
-            year = 2012;
-            draw();
-        });
-        $(".btnyear2013").click(function () {
-            year = 2013;
-            draw();
-        });
-        $(".btnyear2014").click(function () {
-            year = 2014;
-            draw();
-        });
-        $(".btnyear2015").click(function () {
-            year = 2015;
-            draw();
-        });
-        $(".btnyear2016").click(function () {
-            year = 2016;
-            draw();
-        });
 
         $(".btnmotor").click(function () {
             var id = $(this).attr("id").replace("btn", "");
