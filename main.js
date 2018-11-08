@@ -47,6 +47,7 @@ function bar_chart(element, country, type) {
         return;
     }
 
+
     var data = country_data;
 
     //Create var x
