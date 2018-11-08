@@ -89,6 +89,14 @@ function bar_chart(element) {
         .style("fill", function (d) {
             return z(d.Name)
         })
+        .on('mouseover', function(d) {
+            d3.select(this).style('fill-opacity',"0.7");
+            console.log('over');
+        })
+        .on('mouseout', function(d) {
+            d3.select(this).style('fill-opacity',"1");
+            console.log('out');
+        });
         /*.on("mouseover", function(d){
             d3.select(this)
                 .transition().duration(100)
