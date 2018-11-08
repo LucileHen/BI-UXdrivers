@@ -263,9 +263,17 @@ d3.json("countries.json", function (json) {
                     .style("left", d3.mouse(this)[0] + 23 + "px")
                     .style("top", d3.mouse(this)[1] + 130 + "px")
                     .text(function (e) {
-                        return d.properties.NAME;
-                    });
+                        vehicules = data_vehicules.filter(function (f) {
+                            return f.Name === d.properties.NAME;
+                        });
+                        var note = "";
+                        if (vehicules.length > 0) {
+                            note = vehicules[0].Note;
+                            console.log(vehicules[0].Note)
+                        }
 
+                        return d.properties.NAME + " | Niveau de pollution : " + note;
+                    })
             })
             .on("mouseout", function (d) {
                 d3.select(".tooltipD3")
