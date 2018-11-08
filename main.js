@@ -21,6 +21,10 @@ function bar_chart(element) {
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0)
+        .style("width", 600);
 
 
     //Create an array with the only three data we need
@@ -92,6 +96,7 @@ function bar_chart(element) {
         .on('mouseover', function(d) {
             d3.select(this).style('fill-opacity',"0.7");
             console.log('over');
+
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");

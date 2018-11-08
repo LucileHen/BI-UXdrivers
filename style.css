@@ -114,17 +114,17 @@ path:hover {
 
 .tooltipD3 {
 
-    border-radius:0.5em;
-    white-space: nowrap;
-    background-color:rgba(0,0,0,0.9);
-    padding:0.3em;
     position: absolute;
-    color: white;
+    max-width: 400px;
+    height: auto;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.80);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    font-family: sans-serif;
     font-size: 12px;
-    /*width: 70px;*/
-    height: 26px;
-    font-family: monospace;
-    text-align: center;
-    z-index: 1000;
-    display: none;
+    font-weight: bold;
 }
+
