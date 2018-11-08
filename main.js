@@ -7,46 +7,49 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 20, right: 20, bottom: 30, left: 40};
+var margin = {top: 50, right: 20, bottom: 30, left: 40};
 
 //Define colors
 var colors = ["#0B4F6C", "#F4AA29", "#20BF55", "#F4295F", "#248ED8"];
 
 //Crate a barchart
-function bar_chart(element) {
+function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 1000).attr("height", 500);
+    var svg = d3.select("#" + element).append("svg").attr("width", 500).attr("height", 500);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("width", 600);
+    var myTool = d3.select("body")
+        .append("div")
+        .attr("class", "tooltipD3")
+        .style("opacity", "0")
+        .style("display", "none");
 
+    var labels = {
+        pol: ["Emission NOx (T)", "Emission CO2 (T)", "Emission PM10 (T)" ],
+        voit: ["Diesel", "Essence", "HDiesel", "HEssence", "Electrique"]
+    };
 
-    //Create an array with the only three data we need
-    /*var nested_data = d3.nest()
-    //Regroup data by property
-        .key(function (d) {
-            return d[property];
+    //Select just the line we want
+    vehicules = data_vehicules.filter(function (f) {
+        return f.Name === country;
+    });
+
+    //create the array for the barchart
+    if (vehicules.length > 0) {
+        line = vehicules[0];
+        var country_data = [];
+        labels[type].forEach(function(e){
+            country_data.push({label:e, value: +line[e]})
         })
-        //Calculate number of property and the time it takes
-        .rollup(function (d) {
-            return {
-                size: d.length, total_time: d3.sum(d, function (d) {
-                    return d.time;
-                })
-            };
-        })
-        .entries(data);
+    } else {
+        return;
+    }
 
-    //Sort nested data by alphabetical order
-    nested_data = nested_data.sort(function (a, b) {
-        return d3.ascending(a.key, b.key)
-    });*/
+
+    var data = country_data;
 
     //Create var x
     var x = d3.scaleBand()
@@ -62,12 +65,12 @@ function bar_chart(element) {
 
     //Define the domain of x axe
     x.domain(data.map(function(d) {
-        return d.Name;
+        return d.label;
     }));
 
     //Define the domain of y axe
     y.domain([0, d3.max(data, function(d) {
-        return d.TOTAL;
+        return d.value;
     })]);
     //Define the domain of colors
     /*z.domain(data.map(function (d) {
@@ -81,27 +84,25 @@ function bar_chart(element) {
         .append("rect")
         .attr("class", "bar")
         .attr("x", function (d) {
-            return x(d.Name)
+            return x(d.label)
         })
         .attr("y", function (d) {
-            return y(d.TOTAL)
+            return y(d.value)
         })
         .attr("height",function(d) {
-            return height - y(d.TOTAL);
+            return height - y(d.value);
         })
         .attr("width", x.bandwidth())
         .style("fill", function (d) {
-            return z(d.Name)
+            return z(d.label)
         })
         .on('mouseover', function(d) {
             d3.select(this).style('fill-opacity',"0.7");
-            console.log('over');
-
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
-            console.log('out');
         });
+
         /*.on("mouseover", function(d){
             d3.select(this)
                 .transition().duration(100)
@@ -124,6 +125,11 @@ function bar_chart(element) {
     g.append("g")
         .attr("class", "axis")
         .call(d3.axisLeft(y).ticks(null, "s"))
+
+    g.append('text')
+        .attr('x', 5)
+        .attr('y', -15)
+        .text("Emissions pour la Belgique");
 }
 
 function clear_fuel_classes(){
@@ -227,7 +233,8 @@ d3.json("countries.json", function (json) {
             d.TOTAL = + d.TOTAL;
         });
 
-        bar_chart("pol");
+        bar_chart("pol", "Belgium", "pol");
+        bar_chart("voit", "Belgium", "voit");
 
         //Bind data and create one path per GeoJSON feature
         svg.selectAll("path")
