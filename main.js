@@ -50,7 +50,7 @@ var projection = d3.geoMercator() //utiliser une projection standard pour aplati
 
 
 //Load the googlesheet data
-var URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpT3hvIkP5GZfoM7yOQtO4QKpTrcJcuAJ_QC736fuD106U0wBjQ6A_QJ1cyGf3Avsn15ez9K_Y-GEH";
+var URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOo8Wdui9u_DWB3171EW2V6hFE5On_JWKw8o6-dsKtVM4scU7PdiPqp0utqTnUj_MluY_kx9diSOOM";
 URL += "/pub?single=true&output=csv";
 
 var data_vehicules = [];
@@ -59,50 +59,38 @@ var data_vehicules = [];
 var path = d3.geoPath()
     .projection(projection);
 
-//Define the default year
-var year = 2012;
-var type = "ElectriqueP";
-
 //Create SVG
 var svg = d3.select("#container")
     .append("svg")
     .attr("width", w)
     .attr("height", h);
 
-function reset_color(e) {
-    for (var i = 0; i < 5; i++) {
-        $("path").removeClass("color_" + i);
-    }
-}
 
 function draw() {
-    opacity_scale = d3.scaleLinear().range([0.3, 0.9]);
+    opacity_scale = d3.scaleLinear().range([1, 0.2]);
     opacity_scale.domain([
         0,
-        d3.max(data_vehicules, function (d) {
-             if (d["Année"] == year){
-                 return +d[type].replace(",",".");
-             } else {
-                 return 0.0;
-             }
+        d3.max(data_vehicules, function (d){
+                 return +d.Note.replace(",",".");
+
         })
     ]);
 
     svg.selectAll("path")
-        .style("fill-opacity", (function (e) {
+        .style("fill-opacity", function (e) {
+
 
             vehicules = data_vehicules.filter(function (f) {
-                return f.Name === e.properties.NAME && f["Année"] == year;
+                return f.Name === e.properties.NAME;
             });
 
             if (vehicules.length > 0) {
-                return opacity_scale(+vehicules[0][type].replace(",", "."));
+                return opacity_scale(Math.round(vehicules[0].Note.replace(",", ".")*100)/100);
+            } else {
+                $(this).addClass("unknown");
             }
-            else {
-                return 0.0;
-            }
+        })
 
-        }))
 }
 
 //Load in GeoJSON data
@@ -119,20 +107,8 @@ d3.json("countries.json", function (json) {
             .append("path")
             .attr("d", path)
             .attr("class", "unclicked color_0")
-            .attr("stroke", "#606060")
-            .style("fill-opacity", function (e) {
-
-
-                vehicules = data_vehicules.filter(function (f) {
-                    return f.Name === e.properties.NAME && f["Année"] == year;
-                });
-
-                if (vehicules.length > 0) {
-                    return Math.round(vehicules[0][type].replace(",", ".")*100)/100;
-                } else {
-                    return 0.0;
-                }
-            })
+            .attr("stroke", "#FFFFFF")
+            .attr("stroke-width", "0.6")
             .on("click", function (d) {
                 var e = $(this);
                 if (e.hasClass("unclicked")) {
@@ -148,8 +124,8 @@ d3.json("countries.json", function (json) {
 
                 d3.select(".tooltipD3")
                     .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + 10 + "px")
-                    .style("top", d3.mouse(this)[1] + 35 + "px")
+                    .style("left", d3.mouse(this)[0] + 23 + "px")
+                    .style("top", d3.mouse(this)[1] + 130 + "px")
                     .text(function (e) {
                         return d.properties.NAME;
                     });
@@ -160,27 +136,6 @@ d3.json("countries.json", function (json) {
                     .style("display", "none");
             });
 
-
-        $(".btnyear2012").click(function () {
-            year = 2012;
-            draw();
-        });
-        $(".btnyear2013").click(function () {
-            year = 2013;
-            draw();
-        });
-        $(".btnyear2014").click(function () {
-            year = 2014;
-            draw();
-        });
-        $(".btnyear2015").click(function () {
-            year = 2015;
-            draw();
-        });
-        $(".btnyear2016").click(function () {
-            year = 2016;
-            draw();
-        });
 
         $(".btnmotor").click(function () {
             var id = $(this).attr("id").replace("btn", "");
