@@ -17,7 +17,7 @@ function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 500).attr("height", 500);
+    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 300);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -166,8 +166,8 @@ $("button.jQueryColorChangeFuel5").click(function () {
 });
 
 //Width and height
-var w = 700;
-var h = 500;
+var w = 600;
+var h = 600;
 
 //Define map projection
 var projection = d3.geoMercator() //utiliser une projection standard pour aplatir les pôles, voir D3 projection plugin
