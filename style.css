@@ -1,5 +1,5 @@
 svg {
-    background-color: #d3d3d3;
+    background-color: white;
 }
 
 h1 {
@@ -127,7 +127,6 @@ path:hover {
 
 .selectedYear {
     color: white;
-    background:darkgray;
 }
 
 .tooltipD3 {
