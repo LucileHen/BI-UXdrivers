@@ -10,7 +10,7 @@ var data = undefined;
 var margin = {top: 50, right: 20, bottom: 30, left: 50};
 
 //Define colors
-var colors = ["#0B4F6C", "#F4AA29", "#20BF55", "#F4295F", "#248ED8"];
+var colors = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
 
 //Crate a barchart
 function bar_chart(element, country, type) {
