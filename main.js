@@ -7,7 +7,7 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 50, right: 20, bottom: 30, left: 95};
+var margin = {top: 70, right: 20, bottom: 30, left: 95};
 
 //Define colors
 var colorsvoit = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
@@ -19,7 +19,14 @@ function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 350);
+    var BCheight = [];
+    if (type === "voit"){
+        BCheight = 350
+    }
+    else if (type === "pol"){
+        BCheight = 250
+    }
+    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", BCheight);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -98,13 +105,13 @@ function bar_chart(element, country, type) {
     //Define the domain of x axe it's different for the two BC
     if (type === "voit"){
         x.domain([1, d3.max([max_diesel, max_essence])]);
-        title = [": Répartition des types de moteurs."]
         z = d3.scaleOrdinal(colorsvoit);
+        title = [": Répartition des types de moteurs comparé à l'Europe."]
     }
     else if (type === "pol"){
         x.domain([1, d3.max([max_co2, max_NOX])]);
-        title = [": Quelles émissions de polluants?"]
         z = d3.scaleOrdinal(colorspol);
+        title = [": Quelles émissions de polluants comparé à l'Europe?"]
     }
 
     //Define the domain of y axe
