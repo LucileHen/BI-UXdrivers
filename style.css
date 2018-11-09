@@ -37,13 +37,11 @@ h3{
 }
 
 .unclicked.color_0{
-    fill : #248ED8;
-    fill-opacity: 0.8;
+    fill-opacity : 1;
 }
 
 .clicked.color_0{
-    fill : #eeebff;
-    fill-opacity: 1;
+    fill-opacity : 0.5;
 }
 
 .unclicked.color_0.unknown{

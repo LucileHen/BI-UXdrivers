@@ -134,7 +134,7 @@ function bar_chart(element, country, type) {
         })
         .on("mousemove", function (d) {
             if (type === "voit"){
-                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(this).style('fill-opacity',"0.5");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -143,7 +143,7 @@ function bar_chart(element, country, type) {
                         return d.value + " Voitures " + d.label;
                     })
             }else if (type === "pol"){
-                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(this).style('fill-opacity',"0.5");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -178,7 +178,7 @@ function bar_chart(element, country, type) {
         })
         .on("mousemove", function (d) {
             if (type === "voit"){
-                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(this).style('fill-opacity',"0.5");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -187,7 +187,7 @@ function bar_chart(element, country, type) {
                         return d.value + " Voitures " + d.label + " en moyenne en Europe";
                     })
             }else if (type === "pol"){
-                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(this).style('fill-opacity',"0.5");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -199,6 +199,8 @@ function bar_chart(element, country, type) {
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
+            d3.select(".tooltipD3-bar")
+                .style("display", "none");
         });
 
     //create a group for x axe
