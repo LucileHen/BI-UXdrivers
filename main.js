@@ -184,6 +184,12 @@ function bar_chart(element, country, type) {
             return europe_color;
         })
         .on("mousemove", function (d) {
+            var v = 0;
+            europe_data.forEach(function(e){
+                if (e.label === d.label){
+                    v = e.value;
+                }
+            });
             if (type === "voit"){
                 d3.select(this).style('fill-opacity',"0.5");
                 d3.select(".tooltipD3-bar")
@@ -191,7 +197,7 @@ function bar_chart(element, country, type) {
                     .style("left", d3.event.pageX + 10 + "px")
                     .style("top", d3.event.pageY - 20 + "px")
                     .text(function (e) {
-                        return d.value + " Voitures " + d.label + " en moyenne en Europe";
+                        return v + " Voitures " + d.label + " en moyenne en Europe";
                     })
             }else if (type === "pol"){
                 d3.select(this).style('fill-opacity',"0.5");
@@ -200,7 +206,7 @@ function bar_chart(element, country, type) {
                     .style("left", d3.event.pageX + 10 + "px")
                     .style("top", d3.event.pageY - 20 + "px")
                     .text(function (e) {
-                        return d.value + " tonnes d'" + d.label + " en moyenne en Europe";
+                        return v + " tonnes d'" + d.label + " en moyenne en Europe";
                     })
             }
         })
