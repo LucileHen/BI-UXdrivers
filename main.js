@@ -12,7 +12,7 @@ var margin = {top: 50, right: 20, bottom: 30, left: 95};
 //Define colors
 var colorsvoit = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
 var europe_color = "#DEDEDE";
-var colorspol = ["#0ed845", "#f44062","#9af47b"];
+var colorspol = ["#f4e107", "#f48f14","#d84049"];
 
 //Crate a barchart
 function bar_chart(element, country, type) {
