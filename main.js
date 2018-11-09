@@ -7,7 +7,7 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 50, right: 20, bottom: 30, left: 40};
+var margin = {top: 50, right: 20, bottom: 30, left: 50};
 
 //Define colors
 var colors = ["#0B4F6C", "#F4AA29", "#20BF55", "#F4295F", "#248ED8"];
@@ -52,26 +52,26 @@ function bar_chart(element, country, type) {
     var data = country_data;
 
     //Create var x
-    var x = d3.scaleBand()
-        .rangeRound([0, width])
-        .padding(0.1);
+    var x = d3.scaleLog()
+        .rangeRound([0, width]);
 
     //Create var y
-    var y = d3.scaleLog()
-        .rangeRound([height, 0]);
+    var y = d3.scaleBand()
+        .rangeRound([height, 0])
+        .padding(0.1);
 
     //Create var z
     var z = d3.scaleOrdinal(colors);
 
     //Define the domain of x axe
-    x.domain(data.map(function(d) {
-        return d.label;
-    }));
-
-    //Define the domain of y axe
-    y.domain([1, d3.max(data, function(d) {
+    x.domain([1, d3.max(data, function(d) {
         return d.value;
     })]);
+
+    //Define the domain of y axe
+    y.domain(data.map(function(d) {
+        return d.label
+    }));
 
     //draw the barchart
     g.selectAll(".bar")
@@ -79,16 +79,14 @@ function bar_chart(element, country, type) {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", function (d) {
-            return x(d.label)
-        })
         .attr("y", function (d) {
-            return y(d.value)
+            return y(d.label)
         })
-        .attr("height",function(d) {
-            return height - y(d.value);
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .attr("width",function(d) {
+            return x(d.value);
         })
-        .attr("width", x.bandwidth())
         .style("fill", function (d) {
             return z(d.label)
         })
@@ -103,13 +101,13 @@ function bar_chart(element, country, type) {
     g.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x)
+            .tickFormat(d3.format(".0s")));
 
     //crate a group for y axe
     g.append("g")
         .attr("class", "axis")
-        .call(d3.axisLeft(y)
-            .tickFormat(d3.format(".0s")))
+        .call(d3.axisLeft(y));
 
     g.append('text')
         .attr('x', 5)
@@ -254,7 +252,6 @@ d3.json("countries.json", function (json) {
                         var note = "";
                         if (vehicules.length > 0) {
                             note = vehicules[0].Note;
-                            console.log(vehicules[0].Note)
                         }
 
                         return d.properties.NAME + " | Niveau de pollution : " + note;
