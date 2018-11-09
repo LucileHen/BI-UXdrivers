@@ -249,7 +249,7 @@ d3.json("countries.json", function (json) {
                         console.log(selected);
                     }
                 }
-            })
+            })//TEST
             .on("mousemove", function (d) {
                 d3.select(".tooltipD3")
                     .style("display", "block")
