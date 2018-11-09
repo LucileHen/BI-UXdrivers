@@ -57,7 +57,7 @@ function bar_chart(element, country, type) {
         .padding(0.1);
 
     //Create var y
-    var y = d3.scaleLinear()
+    var y = d3.scaleLog()
         .rangeRound([height, 0]);
 
     //Create var z
@@ -69,13 +69,9 @@ function bar_chart(element, country, type) {
     }));
 
     //Define the domain of y axe
-    y.domain([0, d3.max(data, function(d) {
+    y.domain([1, d3.max(data, function(d) {
         return d.value;
     })]);
-    //Define the domain of colors
-    /*z.domain(data.map(function (d) {
-        return d.colors;
-    }));*/
 
     //draw the barchart
     g.selectAll(".bar")
@@ -103,18 +99,6 @@ function bar_chart(element, country, type) {
             d3.select(this).style('fill-opacity',"1");
         });
 
-        /*.on("mouseover", function(d){
-            d3.select(this)
-                .transition().duration(100)
-                .attr("fill", "black")
-                .attr("y", y(d.value.size) - 20)
-        })
-        .on("mouseout", function(d){
-            d3.select(this)
-                .transition().duration(100)
-                .attr("y", y(d.value.size))
-        });*/
-
     //create a group for x axe
     g.append("g")
         .attr("class", "axis")
@@ -124,12 +108,13 @@ function bar_chart(element, country, type) {
     //crate a group for y axe
     g.append("g")
         .attr("class", "axis")
-        .call(d3.axisLeft(y).ticks(null, "s"))
+        .call(d3.axisLeft(y)
+            .tickFormat(d3.format(".0s")))
 
     g.append('text')
         .attr('x', 5)
         .attr('y', -15)
-        .text("Emissions pour la Belgique");
+        .text("Emissions pour la " + country);
 }
 
 function clear_fuel_classes(){
