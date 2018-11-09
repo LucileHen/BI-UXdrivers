@@ -41,13 +41,11 @@ h3{
 }
 
 .unclicked.color_0{
-    fill : #248ED8;
-    fill-opacity: 0.8;
+    fill-opacity : 1;
 }
 
 .clicked.color_0{
-    fill : #eeebff;
-    fill-opacity: 1;
+    fill-opacity : 0.5;
 }
 
 .unclicked.color_0.unknown{
@@ -96,8 +94,6 @@ path:hover {
 }
 
 .tooltipD3-bar{
-    background-color: black !important;
-    color: white !important;
     position: absolute;
     max-width: 400px;
     height: auto;
@@ -113,3 +109,45 @@ path:hover {
     z-index: 100;
 }
 
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.apropos{
+    text-align: center;
+    padding: 20px;
+}

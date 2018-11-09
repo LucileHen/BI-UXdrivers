@@ -7,18 +7,26 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 50, right: 20, bottom: 30, left: 95};
+var margin = {top: 70, right: 20, bottom: 30, left: 95};
 
 //Define colors
-var colors = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
-var europe_color = "#000";
+var colorsvoit = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
+var europe_color = "#DEDEDE";
+var colorspol = ["#f4e107", "#f48f14","#d84049"];
 
 //Crate a barchart
 function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 350);
+    var BCheight = [];
+    if (type === "voit"){
+        BCheight = 350
+    }
+    else if (type === "pol"){
+        BCheight = 250
+    }
+    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", BCheight);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -76,7 +84,7 @@ function bar_chart(element, country, type) {
         .padding(0.1);
 
     //Create var z
-    var z = d3.scaleOrdinal(colors);
+    var z = d3.scaleOrdinal();
 
     //Find the max of collumns
     var max_co2 = d3.max(data_vehicules, function(d) {
@@ -97,11 +105,13 @@ function bar_chart(element, country, type) {
     //Define the domain of x axe it's different for the two BC
     if (type === "voit"){
         x.domain([1, d3.max([max_diesel, max_essence])]);
-        title = [": Répartition des types de moteurs."]
+        z = d3.scaleOrdinal(colorsvoit);
+        title = [": Répartition des types de moteurs comparé à l'Europe."]
     }
     else if (type === "pol"){
         x.domain([1, d3.max([max_co2, max_NOX])]);
-        title = [": Quelles émissions de polluants?"]
+        z = d3.scaleOrdinal(colorspol);
+        title = [": Quelles émissions de polluants comparé à l'Europe?"]
     }
 
     //Define the domain of y axe
@@ -129,17 +139,26 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return z(d.label)
         })
-        /*.on('mouseover', function(d) {
-            d3.select(this).style('fill-opacity',"0.7");
-        })*/
         .on("mousemove", function (d) {
-            d3.select(".tooltipD3-bar")
-                .style("display", "block")
-                .style("left", d3.event.pageX + 10 + "px")
-                .style("top", d3.event.pageY - 20 + "px")
-                .text(function (e) {
-                    return d.value;
-                })
+            if (type === "voit"){
+                d3.select(this).style('fill-opacity',"0.5");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " Voitures " + d.label;
+                    })
+            }else if (type === "pol"){
+                d3.select(this).style('fill-opacity',"0.5");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " tonnes d'" + d.label;
+                    })
+            }
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
@@ -164,11 +183,31 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return europe_color;
         })
-        .on('mouseover', function(d) {
-            d3.select(this).style('fill-opacity',"0.7");
+        .on("mousemove", function (d) {
+            if (type === "voit"){
+                d3.select(this).style('fill-opacity',"0.5");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " Voitures " + d.label + " en moyenne en Europe";
+                    })
+            }else if (type === "pol"){
+                d3.select(this).style('fill-opacity',"0.5");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " tonnes d'" + d.label + " en moyenne en Europe";
+                    })
+            }
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
+            d3.select(".tooltipD3-bar")
+                .style("display", "none");
         });
 
     //create a group for x axe
@@ -367,3 +406,29 @@ d3.json("countries.json", function (json) {
     });
 
 });
+
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
