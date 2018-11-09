@@ -78,14 +78,13 @@ function bar_chart(element, country, type) {
     //Create var z
     var z = d3.scaleOrdinal(colors);
 
+    //Find the max of collumns
     var max_co2 = d3.max(data_vehicules, function(d) {
         return +d["Emission CO2"];
     });
-
     var max_NOX = d3.max(data_vehicules, function(d) {
         return +d["Emission NOx"];
     });
-
     var max_diesel = d3.max(data_vehicules, function(d) {
         return +d["Diesel"];
     });
@@ -93,12 +92,16 @@ function bar_chart(element, country, type) {
         return +d["Essence"];
     });
 
-    //Define the domain of x axe
+    var title = [];
+
+    //Define the domain of x axe it's different for the two BC
     if (type === "voit"){
-        x.domain([1, d3.max([max_diesel, max_essence])])
+        x.domain([1, d3.max([max_diesel, max_essence])]);
+        title = [": Répartition des types de moteurs."]
     }
     else if (type === "pol"){
-        x.domain([1, d3.max([max_co2, max_NOX])])
+        x.domain([1, d3.max([max_co2, max_NOX])]);
+        title = [": Quelles émissions de polluants?"]
     }
 
     //Define the domain of y axe
@@ -195,7 +198,7 @@ function bar_chart(element, country, type) {
     g.append('text')
         .attr('x', 5)
         .attr('y', -15)
-        .text("Emissions pour la " + vehicules[0].Nom);
+        .text(vehicules[0].Nom + " " + title);
 }
 
 function clear_fuel_classes(){
