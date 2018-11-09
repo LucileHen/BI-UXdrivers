@@ -193,7 +193,7 @@ function bar_chart(element, country, type) {
                     .style("left", d3.event.pageX + 10 + "px")
                     .style("top", d3.event.pageY - 20 + "px")
                     .text(function (e) {
-                        return d.value + " Tonne d'" + d.label + " en moyenne en Europe";
+                        return d.value + " tonnes d'" + d.label + " en moyenne en Europe";
                     })
             }
         })
