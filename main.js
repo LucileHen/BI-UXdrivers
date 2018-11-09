@@ -34,7 +34,7 @@ function bar_chart(element, country, type) {
 
     //Select just the line we want
     vehicules = data_vehicules.filter(function (f) {
-        return f.Name === country;
+        return f.Nom === country;
     });
 
     //create the array for the barchart
@@ -84,7 +84,7 @@ function bar_chart(element, country, type) {
     }
     else if (type === "pol"){
         x.domain([1, d3.max([max_co2, max_NOX])])
-    };
+    }
 
 
     //Define the domain of y axe
@@ -109,11 +109,33 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return z(d.label)
         })
-        .on('mouseover', function(d) {
+        /*.on('mouseover', function(d) {
             d3.select(this).style('fill-opacity',"0.7");
+        })*/
+        .on("mousemove", function (d) {
+            d3.select(this).style('fill-opacity',"0.7");
+            if (type === "voit"){
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.mouse(this)[0] + 920 + "px")
+                    .style("top", d3.mouse(this)[1] + 80 + "px")
+                    .text(function (e) {
+                        return d.value;
+                    })
+            }else if (type === "pol"){
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.mouse(this)[0] + 920 + "px")
+                    .style("top", d3.mouse(this)[1] + 430 + "px")
+                    .text(function (e) {
+                        return d.value;
+                    })
+            }
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
+            d3.select(".tooltipD3-bar")
+                .style("display", "none");
         });
 
     //create a group for x axe
@@ -179,7 +201,7 @@ var projection = d3.geoMercator() //utiliser une projection standard pour aplati
     .scale([w / 1.2])// zoom, plus la valeur est petit plus le zoom est gros
     .rotate([0, 0, -2.7]);
 
-var selected = "Average";
+var selected = "Europe";
 
 //Load the googlesheet data
 var URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOo8Wdui9u_DWB3171EW2V6hFE5On_JWKw8o6-dsKtVM4scU7PdiPqp0utqTnUj_MluY_kx9diSOOM";
@@ -199,17 +221,19 @@ var svg = d3.select("#map")
 
 
 function draw() {
-    opacity_scale = d3.scaleLinear().range([1, 0.2]);
+    opacity_scale = d3.scaleLinear().range(["#248ED8", "red"]);
     opacity_scale.domain([
-        0,
+        d3.min(data_vehicules, function (d){
+            return +d.Note.replace(",",".");
+        }),
         d3.max(data_vehicules, function (d){
-                 return +d.Note.replace(",",".");
+            return +d.Note.replace(",",".");
 
         })
     ]);
 
     svg.selectAll("path")
-        .style("fill-opacity", function (e) {
+        .style("fill", function (e) {
 
 
             vehicules = data_vehicules.filter(function (f) {
@@ -260,15 +284,17 @@ d3.json("countries.json", function (json) {
                         t.addClass("unclicked");
                         e.removeClass("unclicked");
                         e.addClass("clicked");
-                        selected = d.properties.NAME;
+                        selected = vehicules[0].Nom;
                         console.log(selected);
                         bar_chart("pol", selected, "pol");
                         bar_chart("voit", selected, "voit");
                     } else if (e.hasClass("clicked")) {
                         e.removeClass("clicked");
                         e.addClass("unclicked");
-                        selected = "none";
+                        selected = "Europe";
                         console.log(selected);
+                        bar_chart("pol", selected, "pol");
+                        bar_chart("voit", selected, "voit");
                     }
                 }
             })//TEST
@@ -284,7 +310,8 @@ d3.json("countries.json", function (json) {
                         var note = "";
                         if (vehicules.length > 0) {
                             note = vehicules[0].Note;
-                            return d.properties.NAME + " | Niveau de pollution : " + note;
+                            nom = vehicules[0].Nom;
+                            return nom + " | Niveau de pollution : " + note;
                         } else{
                             return d.properties.NAME + " | Données non connues";
                         }
