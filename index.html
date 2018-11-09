@@ -33,6 +33,28 @@
     </div>
 </div>
 
+<!-- Trigger/Open The Modal -->
+<div class="apropos">
+    <button type="button" class="btn btn-outline-primary" id="myBtn">A propos</button>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Cette visualisation de données vise à montrer les liens éventuels entre la quantité de véhicules selon leur motorisation et la pollution dans la plupart des pays d’Europe.</p>
+        <p>Réalisé à partir de données issues des sites eurostat & eea.europa.eu.</p>
+        <p>Calcul de la note du pays = somme des polluants (CO PM10 NOx) divisé par le parc automobile du pays</p>
+        <p><u>Définition des 3 émissions polluantes retenues :</u></p>
+        <p><b>PM10</b> : particules en suspension de taille inférieure à 10µm. Ces particules ont des effets sur la santé, principalement au niveau cardiovasculaire et respiratoire.</p>
+        <p><b>CO</b> : Le monoxyde de carbone est un gaz incolore, inodore et inflammable dont la formation provient de la combustion incomplète de matières organiques (gaz, charbon, fioul ou bois, carburants). Il participe aux mécanismes de formation de l'ozone troposphérique. Sa toxicité est liée au fait qu'il se fixe sur l’hémoglobine prenant la place de l’oxygène et provoquant ainsi un déficit d’oxygénation du système nerveux, cœur et vaisseaux sanguins. En cas d’exposition à de fortes concentrations, il peut entraîner la mort (300 à 400 par an en France).</p>
+        <p><b>NOx</b> : oxydes d’azote. Ils participent aux pluies acides et à la pollution photochimique. Le NO perturbe le transport du dioxygène dans le sang en limitant sa fixation sur l'hémoglobine. Le NO2, très oxydant et corrosif, pénètre profondément dans les poumons où il fragilise la muqueuse face aux agressions infectieuses. Irritant les bronches, il augmente la fréquence et la gravité des crises chez les asthmatiques.</p>
+        <p>(sources : cotita.fr & airparif.asso.fr)</p>
+    </div>
+
+</div>
+
 <!--TOPOJSON V2-->
 <script src="https://d3js.org/topojson.v2.min.js"></script>
 
