@@ -52,7 +52,7 @@ function bar_chart(element, country, type) {
     var data = country_data;
 
     //Create var x
-    var x = d3.scaleLog()
+    var x = d3.scaleLinear()
         .rangeRound([0, width]);
 
     //Create var y
@@ -159,7 +159,7 @@ var projection = d3.geoMercator() //utiliser une projection standard pour aplati
     .scale([w / 1.2])// zoom, plus la valeur est petit plus le zoom est gros
     .rotate([0, 0, -2.7]);
 
-var selected = "none";
+var selected = "Average";
 
 //Load the googlesheet data
 var URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOo8Wdui9u_DWB3171EW2V6hFE5On_JWKw8o6-dsKtVM4scU7PdiPqp0utqTnUj_MluY_kx9diSOOM";
@@ -216,8 +216,8 @@ d3.json("countries.json", function (json) {
             d.TOTAL = + d.TOTAL;
         });
 
-        bar_chart("pol", "Belgium", "pol");
-        bar_chart("voit", "Belgium", "voit");
+        bar_chart("pol", selected, "pol");
+        bar_chart("voit", selected, "voit");
 
         //Bind data and create one path per GeoJSON feature
         svg.selectAll("path")
@@ -242,6 +242,8 @@ d3.json("countries.json", function (json) {
                         e.addClass("clicked");
                         selected = d.properties.NAME;
                         console.log(selected);
+                        bar_chart("pol", selected, "pol");
+                        bar_chart("voit", selected, "voit");
                     } else if (e.hasClass("clicked")) {
                         e.removeClass("clicked");
                         e.addClass("unclicked");
