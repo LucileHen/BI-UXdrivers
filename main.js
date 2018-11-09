@@ -7,7 +7,7 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 50, right: 20, bottom: 30, left: 50};
+var margin = {top: 50, right: 20, bottom: 30, left: 95};
 
 //Define colors
 var colors = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
@@ -17,7 +17,7 @@ function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 300);
+    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 350);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -28,8 +28,8 @@ function bar_chart(element, country, type) {
         .style("display", "none");
 
     var labels = {
-        pol: ["Emission NOx (T)", "Emission CO2 (T)", "Emission PM10 (T)" ],
-        voit: ["Diesel", "Essence", "HDiesel", "HEssence", "Electrique"]
+        pol: ["Emission NOx (T)", "Emission CO (T)", "Emission PM10 (T)" ],
+        voit: ["Diesel", "Essence", "Hybride Diesel", "Hybride Essence", "Electrique"]
     };
 
     //Select just the line we want
@@ -52,7 +52,7 @@ function bar_chart(element, country, type) {
     var data = country_data;
 
     //Create var x
-    var x = d3.scaleLinear()
+    var x = d3.scaleLog()
         .rangeRound([0, width]);
 
     //Create var y
@@ -63,10 +63,29 @@ function bar_chart(element, country, type) {
     //Create var z
     var z = d3.scaleOrdinal(colors);
 
+    var max_co2 = d3.max(data_vehicules, function(d) {
+        return +d["Emission CO2 (T)"];
+    });
+
+    var max_NOX = d3.max(data_vehicules, function(d) {
+        return +d["Emission NOx (T)"];
+    });
+
+    var max_diesel = d3.max(data_vehicules, function(d) {
+        return +d["Diesel"];
+    });
+    var max_essence = d3.max(data_vehicules, function(d) {
+        return +d["Essence"];
+    });
+
     //Define the domain of x axe
-    x.domain([1, d3.max(data, function(d) {
-        return d.value;
-    })]);
+    if (type === "voit"){
+        x.domain([1, d3.max([max_diesel, max_essence])])
+    }
+    else if (type === "pol"){
+        x.domain([1, d3.max([max_co2, max_NOX])])
+    };
+
 
     //Define the domain of y axe
     y.domain(data.map(function(d) {
@@ -101,7 +120,7 @@ function bar_chart(element, country, type) {
     g.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x)
+        .call(d3.axisBottom(x).ticks(4)
             .tickFormat(d3.format(".0s")));
 
     //crate a group for y axe
@@ -109,10 +128,11 @@ function bar_chart(element, country, type) {
         .attr("class", "axis")
         .call(d3.axisLeft(y));
 
+    //create a group for the title
     g.append('text')
         .attr('x', 5)
         .attr('y', -15)
-        .text("Emissions pour la " + country);
+        .text("Emissions pour la " + vehicules[0].Nom);
 }
 
 function clear_fuel_classes(){
