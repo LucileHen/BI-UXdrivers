@@ -10,8 +10,9 @@ var data = undefined;
 var margin = {top: 50, right: 20, bottom: 30, left: 95};
 
 //Define colors
-var colors = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
-var europe_color = "#000";
+var colorsvoit = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
+var europe_color = "#DEDEDE";
+var colorspol = ["#0ed845", "#f44062","#9af47b"];
 
 //Crate a barchart
 function bar_chart(element, country, type) {
@@ -76,7 +77,7 @@ function bar_chart(element, country, type) {
         .padding(0.1);
 
     //Create var z
-    var z = d3.scaleOrdinal(colors);
+    var z = d3.scaleOrdinal();
 
     //Find the max of collumns
     var max_co2 = d3.max(data_vehicules, function(d) {
@@ -98,10 +99,12 @@ function bar_chart(element, country, type) {
     if (type === "voit"){
         x.domain([1, d3.max([max_diesel, max_essence])]);
         title = [": Répartition des types de moteurs."]
+        z = d3.scaleOrdinal(colorsvoit);
     }
     else if (type === "pol"){
         x.domain([1, d3.max([max_co2, max_NOX])]);
         title = [": Quelles émissions de polluants?"]
+        z = d3.scaleOrdinal(colorspol);
     }
 
     //Define the domain of y axe
