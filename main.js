@@ -7,7 +7,7 @@ $("button.jQueryColorChangeYear").click(function () {
 var data = undefined;
 
 // define margin
-var margin = {top: 50, right: 20, bottom: 30, left: 40};
+var margin = {top: 50, right: 20, bottom: 30, left: 50};
 
 //Define colors
 var colors = ["#0B4F6C", "#F4AA29", "#20BF55", "#F4295F", "#248ED8"];
@@ -17,7 +17,7 @@ function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 900).attr("height", 350);
+    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 300);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -52,30 +52,26 @@ function bar_chart(element, country, type) {
     var data = country_data;
 
     //Create var x
-    var x = d3.scaleBand()
-        .rangeRound([0, width])
-        .padding(0.1);
+    var x = d3.scaleLog()
+        .rangeRound([0, width]);
 
     //Create var y
-    var y = d3.scaleLinear()
-        .rangeRound([height, 0]);
+    var y = d3.scaleBand()
+        .rangeRound([height, 0])
+        .padding(0.1);
 
     //Create var z
     var z = d3.scaleOrdinal(colors);
 
     //Define the domain of x axe
-    x.domain(data.map(function(d) {
-        return d.label;
-    }));
-
-    //Define the domain of y axe
-    y.domain([0, d3.max(data, function(d) {
+    x.domain([1, d3.max(data, function(d) {
         return d.value;
     })]);
-    //Define the domain of colors
-    /*z.domain(data.map(function (d) {
-        return d.colors;
-    }));*/
+
+    //Define the domain of y axe
+    y.domain(data.map(function(d) {
+        return d.label
+    }));
 
     //draw the barchart
     g.selectAll(".bar")
@@ -83,16 +79,14 @@ function bar_chart(element, country, type) {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", function (d) {
-            return x(d.label)
-        })
         .attr("y", function (d) {
-            return y(d.value)
+            return y(d.label)
         })
-        .attr("height",function(d) {
-            return height - y(d.value);
+        .attr("x", 0)
+        .attr("height", y.bandwidth())
+        .attr("width",function(d) {
+            return x(d.value);
         })
-        .attr("width", x.bandwidth())
         .style("fill", function (d) {
             return z(d.label)
         })
@@ -103,33 +97,22 @@ function bar_chart(element, country, type) {
             d3.select(this).style('fill-opacity',"1");
         });
 
-        /*.on("mouseover", function(d){
-            d3.select(this)
-                .transition().duration(100)
-                .attr("fill", "black")
-                .attr("y", y(d.value.size) - 20)
-        })
-        .on("mouseout", function(d){
-            d3.select(this)
-                .transition().duration(100)
-                .attr("y", y(d.value.size))
-        });*/
-
     //create a group for x axe
     g.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x)
+            .tickFormat(d3.format(".0s")));
 
     //crate a group for y axe
     g.append("g")
         .attr("class", "axis")
-        .call(d3.axisLeft(y).ticks(null, "s"))
+        .call(d3.axisLeft(y));
 
     g.append('text')
         .attr('x', 5)
         .attr('y', -15)
-        .text("Emissions pour la Belgique");
+        .text("Emissions pour la " + country);
 }
 
 function clear_fuel_classes(){
@@ -196,7 +179,7 @@ var svg = d3.select("#map")
 
 
 function draw() {
-    opacity_scale = d3.scaleLinear().range([1, 0.5]);
+    opacity_scale = d3.scaleLinear().range([1, 0.2]);
     opacity_scale.domain([
         0,
         d3.max(data_vehicules, function (d){
