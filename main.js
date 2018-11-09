@@ -11,6 +11,7 @@ var margin = {top: 50, right: 20, bottom: 30, left: 95};
 
 //Define colors
 var colors = ["#248ED8", "#F4AA29","#F4295F","#0B4F6C","#20BF55"];
+var europe_color = "#000";
 
 //Crate a barchart
 function bar_chart(element, country, type) {
@@ -28,7 +29,7 @@ function bar_chart(element, country, type) {
         .style("display", "none");
 
     var labels = {
-        pol: ["Emission NOx (T)", "Emission CO (T)", "Emission PM10 (T)" ],
+        pol: ["Emission NOx", "Emission CO", "Emission PM10" ],
         voit: ["Diesel", "Essence", "Hybride Diesel", "Hybride Essence", "Electrique"]
     };
 
@@ -36,10 +37,15 @@ function bar_chart(element, country, type) {
     vehicules = data_vehicules.filter(function (f) {
         return f.Name === country;
     });
+    vehicules_europe = data_vehicules.filter(function (f) {
+        return f.Nom === "Europe";
+    });
+
 
     //create the array for the barchart
     if (vehicules.length > 0) {
         line = vehicules[0];
+        console.log(line);
         var country_data = [];
         labels[type].forEach(function(e){
             country_data.push({label:e, value: +line[e]})
@@ -48,9 +54,18 @@ function bar_chart(element, country, type) {
         return;
     }
 
+    if (vehicules_europe.length > 0) {
+        line = vehicules_europe[0];
+        var europe_data = [];
+        labels[type].forEach(function(e){
+            europe_data.push({label:e, value: +line[e]})
+        })
+    } else {
+        return;
+    }
 
     var data = country_data;
-
+    console.log(data, europe_data);
     //Create var x
     var x = d3.scaleLog()
         .rangeRound([0, width]);
@@ -64,11 +79,11 @@ function bar_chart(element, country, type) {
     var z = d3.scaleOrdinal(colors);
 
     var max_co2 = d3.max(data_vehicules, function(d) {
-        return +d["Emission CO2 (T)"];
+        return +d["Emission CO2"];
     });
 
     var max_NOX = d3.max(data_vehicules, function(d) {
-        return +d["Emission NOx (T)"];
+        return +d["Emission NOx"];
     });
 
     var max_diesel = d3.max(data_vehicules, function(d) {
@@ -86,28 +101,54 @@ function bar_chart(element, country, type) {
         x.domain([1, d3.max([max_co2, max_NOX])])
     };
 
-
     //Define the domain of y axe
     y.domain(data.map(function(d) {
         return d.label
     }));
 
     //draw the barchart
-    g.selectAll(".bar")
+    var bar_gr = g.selectAll(".bar")
         .data(data)
         .enter()
-        .append("rect")
+        .append("g")
+        .attr("transform", function(d){
+            return "translate(0, " + y(d.label) + ")";
+        });
+
+    bar_gr.append("rect")
         .attr("class", "bar")
-        .attr("y", function (d) {
-            return y(d.label)
-        })
+        .attr("y", 0)
         .attr("x", 0)
-        .attr("height", y.bandwidth())
+        .attr("height", y.bandwidth()/2)
         .attr("width",function(d) {
             return x(d.value);
         })
         .style("fill", function (d) {
             return z(d.label)
+        })
+        .on('mouseover', function(d) {
+            d3.select(this).style('fill-opacity',"0.7");
+        })
+        .on('mouseout', function(d) {
+            d3.select(this).style('fill-opacity',"1");
+        });
+
+    bar_gr.append("rect")
+        .attr("class", "bar")
+        .attr("y", y.bandwidth()/2)
+        .attr("x", 0)
+        .attr("height", y.bandwidth()/2)
+        .attr("width",function(d) {
+            var v = 0;
+            europe_data.forEach(function(e){
+                if (e.label === d.label){
+                    v = e.value;
+                }
+            });
+            return x(v);
+        })
+        .style("fill", function (d) {
+            return europe_color;
         })
         .on('mouseover', function(d) {
             d3.select(this).style('fill-opacity',"0.7");
