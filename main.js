@@ -130,24 +130,13 @@ function bar_chart(element, country, type) {
             d3.select(this).style('fill-opacity',"0.7");
         })*/
         .on("mousemove", function (d) {
-            d3.select(this).style('fill-opacity',"0.7");
-            if (type === "voit"){
-                d3.select(".tooltipD3-bar")
-                    .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + 920 + "px")
-                    .style("top", d3.mouse(this)[1] + 80 + "px")
-                    .text(function (e) {
-                        return d.value;
-                    })
-            }else if (type === "pol"){
-                d3.select(".tooltipD3-bar")
-                    .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + 920 + "px")
-                    .style("top", d3.mouse(this)[1] + 430 + "px")
-                    .text(function (e) {
-                        return d.value;
-                    })
-            }
+            d3.select(".tooltipD3-bar")
+                .style("display", "block")
+                .style("left", d3.event.pageX + 10 + "px")
+                .style("top", d3.event.pageY - 20 + "px")
+                .text(function (e) {
+                    return d.value;
+                })
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
@@ -342,8 +331,8 @@ d3.json("countries.json", function (json) {
             .on("mousemove", function (d) {
                 d3.select(".tooltipD3")
                     .style("display", "block")
-                    .style("left", d3.mouse(this)[0] - 30 + "px")
-                    .style("top", d3.mouse(this)[1] + 120 + "px")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
                     .text(function (e) {
                         vehicules = data_vehicules.filter(function (f) {
                             return f.Name === d.properties.NAME;
