@@ -94,7 +94,9 @@ h2 {
     margin-top: 20px;
     padding: 20px;
     background-color: white;
+    /*
     box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+    */
 }
 
 path:hover {
@@ -125,5 +127,6 @@ path:hover {
     font-family: sans-serif;
     font-size: 12px;
     font-weight: bold;
+    z-index: 100;
 }
 

@@ -17,7 +17,7 @@ function bar_chart(element, country, type) {
     //Clean html in id element
     $("#" + element).html("");
     //create a group for svg with margin
-    var svg = d3.select("#" + element).append("svg").attr("width", 600).attr("height", 300);
+    var svg = d3.select("#" + element).append("svg").attr("width", 900).attr("height", 350);
     var width = +svg.attr("width") - margin.left - margin.right;
     var height = +svg.attr("height") - margin.top - margin.bottom;
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -173,10 +173,10 @@ var h = 600;
 var projection = d3.geoMercator() //utiliser une projection standard pour aplatir les pôles, voir D3 projection plugin
     .center([13, 55.5]) //comment centrer la carte, longitude, latitude
     .translate([w / 2, h / 2]) // centrer l'image obtenue dans le svg
-    .scale([w / 1.5])// zoom, plus la valeur est petit plus le zoom est gros
+    .scale([w / 1.2])// zoom, plus la valeur est petit plus le zoom est gros
     .rotate([0, 0, -2.7]);
 
-
+var selected = "none";
 
 //Load the googlesheet data
 var URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOo8Wdui9u_DWB3171EW2V6hFE5On_JWKw8o6-dsKtVM4scU7PdiPqp0utqTnUj_MluY_kx9diSOOM";
@@ -196,7 +196,7 @@ var svg = d3.select("#map")
 
 
 function draw() {
-    opacity_scale = d3.scaleLinear().range([1, 0.2]);
+    opacity_scale = d3.scaleLinear().range([1, 0.5]);
     opacity_scale.domain([
         0,
         d3.max(data_vehicules, function (d){
@@ -247,21 +247,31 @@ d3.json("countries.json", function (json) {
             .attr("stroke-width", "0.6")
             .on("click", function (d) {
                 var e = $(this);
-                if (e.hasClass("unclicked")) {
-                    e.removeClass("unclicked");
-                    e.addClass("clicked");
-                } else if (e.hasClass("clicked")) {
-                    e.removeClass("clicked");
-                    e.addClass("unclicked");
+                var t = $(".clicked");
+                vehicules = data_vehicules.filter(function (f) {
+                    return f.Name === d.properties.NAME;
+                });
+                if (vehicules.length > 0) {
+                    if (e.hasClass("unclicked")) {
+                        t.removeClass("clicked");
+                        t.addClass("unclicked");
+                        e.removeClass("unclicked");
+                        e.addClass("clicked");
+                        selected = d.properties.NAME;
+                        console.log(selected);
+                    } else if (e.hasClass("clicked")) {
+                        e.removeClass("clicked");
+                        e.addClass("unclicked");
+                        selected = "none";
+                        console.log(selected);
+                    }
                 }
-
             })
             .on("mousemove", function (d) {
-
                 d3.select(".tooltipD3")
                     .style("display", "block")
-                    .style("left", d3.mouse(this)[0] + 23 + "px")
-                    .style("top", d3.mouse(this)[1] + 130 + "px")
+                    .style("left", d3.mouse(this)[0] - 30 + "px")
+                    .style("top", d3.mouse(this)[1] + 120 + "px")
                     .text(function (e) {
                         vehicules = data_vehicules.filter(function (f) {
                             return f.Name === d.properties.NAME;
@@ -269,10 +279,10 @@ d3.json("countries.json", function (json) {
                         var note = "";
                         if (vehicules.length > 0) {
                             note = vehicules[0].Note;
-                            console.log(vehicules[0].Note)
+                            return d.properties.NAME + " | Niveau de pollution : " + note;
+                        } else{
+                            return d.properties.NAME + " | Données non connues";
                         }
-
-                        return d.properties.NAME + " | Niveau de pollution : " + note;
                     })
             })
             .on("mouseout", function (d) {
