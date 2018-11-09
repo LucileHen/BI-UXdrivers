@@ -129,11 +129,9 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return z(d.label)
         })
-        /*.on('mouseover', function(d) {
-            d3.select(this).style('fill-opacity',"0.7");
-        })*/
         .on("mousemove", function (d) {
             if (type === "voit"){
+                d3.select(this).style('fill-opacity',"0.7");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -142,6 +140,7 @@ function bar_chart(element, country, type) {
                         return d.value + " Voitures " + d.label;
                     })
             }else if (type === "pol"){
+                d3.select(this).style('fill-opacity',"0.7");
                 d3.select(".tooltipD3-bar")
                     .style("display", "block")
                     .style("left", d3.event.pageX + 10 + "px")
@@ -174,8 +173,26 @@ function bar_chart(element, country, type) {
         .style("fill", function (d) {
             return europe_color;
         })
-        .on('mouseover', function(d) {
-            d3.select(this).style('fill-opacity',"0.7");
+        .on("mousemove", function (d) {
+            if (type === "voit"){
+                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " Voitures " + d.label + " en moyenne en Europe";
+                    })
+            }else if (type === "pol"){
+                d3.select(this).style('fill-opacity',"0.7");
+                d3.select(".tooltipD3-bar")
+                    .style("display", "block")
+                    .style("left", d3.event.pageX + 10 + "px")
+                    .style("top", d3.event.pageY - 20 + "px")
+                    .text(function (e) {
+                        return d.value + " Tonne d'" + d.label + " en moyenne en Europe";
+                    })
+            }
         })
         .on('mouseout', function(d) {
             d3.select(this).style('fill-opacity',"1");
